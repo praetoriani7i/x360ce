@@ -80,6 +80,7 @@ namespace x360ce.App.Controls
 					.Where(x => x.MapTo == (int)_MappedTo)
 					// Filter devices by selected game (no items will be shown if game is not selected).
 					.Where(x => game != null && x.FileName == game.FileName && x.FileProductName == game.FileProductName)
+					.OrderByDescending(x => x.IsOnline)
 					.ToList();
 				var itemsToRemove = mappedUserSettings.Except(itemsToShow).ToArray();
 				var itemsToInsert = itemsToShow.Except(mappedUserSettings).ToArray();
@@ -315,10 +316,6 @@ namespace x360ce.App.Controls
 		{
 			UpdateGridButtons();
 
-
-
-			
-
 			// Get the currently selected item
 			var selected = DevicesDataGrid.SelectedItem as UserSetting;
 
@@ -465,8 +462,7 @@ namespace x360ce.App.Controls
 		{
 			if (!ControlsHelper.AllowLoad(this))
 				return;
-			var o = SettingsManager.Options;
-			SettingsManager.LoadAndMonitor(o, nameof(o.GetXInputStates), EnabledCheckBox, null, null, System.Windows.Data.BindingMode.OneWay);
+			SettingsManager.LoadAndMonitor(SettingsManager.Options, nameof(Options.GetXInputStates), EnabledCheckBox, null, null, System.Windows.Data.BindingMode.OneWay);
 			UpdateGridButtons();
 		}
 
